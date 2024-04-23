@@ -54,6 +54,21 @@ class DateFileLogHandler extends Handler {
         executor.allowCoreThreadTimeOut(true);
     }
 
+    private static final ThreadPoolExecutor executor = new ThreadPoolExecutor(
+            1,
+            5,
+            1,
+            TimeUnit.HOURS,
+            new ArrayBlockingQueue<Runnable>(1024),
+            new NamedThreadFactory("sentinel-datafile-log-executor", true),
+            new ThreadPoolExecutor.DiscardOldestPolicy()
+    );
+
+    static {
+        // allow all thread could be stopped
+        executor.allowCoreThreadTimeOut(true);
+    }
+
     private volatile FileHandler handler;
 
     private final String pattern;
